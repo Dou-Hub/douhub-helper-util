@@ -1,2 +1,2 @@
 rm -rf build
-npm tsc
+yarn tsc

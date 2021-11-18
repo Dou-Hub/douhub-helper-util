@@ -3,25 +3,25 @@
 //  This source code is licensed under the MIT license.
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
 
-import { isObject, isNil, isString, assign, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction } from "lodash";
+import { isObject, isNil, isString, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction } from "lodash";
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 
-export const GUID_PRE: string = '00000000-0000-0000-0000-0000000';
-export const GUID_EMPTY: string = GUID_PRE + '00000';
-export const GUID_00001: string = GUID_PRE + '00001';
-export const GUID_00002: string = GUID_PRE + '00002';
-export const GUID_00003: string = GUID_PRE + '00003';
-export const GUID_00004: string = GUID_PRE + '00004';
-export const GUID_00005: string = GUID_PRE + '00005';
-export const GUID_00010: string = GUID_PRE + '00010';
-export const GUID_00020: string = GUID_PRE + '00020';
-export const GUID_00030: string = GUID_PRE + '00030';
-export const GUID_00040: string = GUID_PRE + '00040';
-export const GUID_00050: string = GUID_PRE + '00050';
+export const GUID_PRE = '00000000-0000-0000-0000-0000000';
+export const GUID_EMPTY = GUID_PRE + '00000';
+export const GUID_00001 = GUID_PRE + '00001';
+export const GUID_00002 = GUID_PRE + '00002';
+export const GUID_00003 = GUID_PRE + '00003';
+export const GUID_00004 = GUID_PRE + '00004';
+export const GUID_00005 = GUID_PRE + '00005';
+export const GUID_00010 = GUID_PRE + '00010';
+export const GUID_00020 = GUID_PRE + '00020';
+export const GUID_00030 = GUID_PRE + '00030';
+export const GUID_00040 = GUID_PRE + '00040';
+export const GUID_00050 = GUID_PRE + '00050';
 
 export type Object = {
-    [key: string]: any
+    [key: string]: object | number | string | Array
 }
 
 export const isNonEmptyString = (s: any, trim?: boolean): boolean => {
@@ -34,7 +34,7 @@ export const isNonEmptyString = (s: any, trim?: boolean): boolean => {
 
 export const isGuid = (v: any): boolean => {
     if (!isNonEmptyString(v)) return false;
-    var pattern = new RegExp(
+    const pattern = new RegExp(
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
     );
     return pattern.test(v.replace("{", "").replace("}", "").toLowerCase()) ? true : false;
@@ -49,21 +49,20 @@ export const isEmptyString = (s: any, trim?: boolean): boolean => {
     return (
         isString(s) &&
         ((!trim && s.length === 0) || (trim && s.trim().length === 0))
-    )?true:false;
+    ) ? true : false;
 };
-
 
 export const newGuid = (): string => {
     return v4();
 };
 
 export const assignDeep = (...args: any[]) => {
-    let result: any = {};
-    for (var i = 0; i < args.length; i++) {
+    const result: Record<string, any> = {};
+    for (let i = 0; i < args.length; i++) {
         const item: any = args[i];
         if (isObject(item)) {
-            const objItem: Object  = item;
-            for (var p in objItem) {
+            const objItem: Record<string, any> = item;
+            for (const p in objItem) {
                 const newPropValue = objItem[p];
                 if (isObject(newPropValue)) {
                     if (isArray(newPropValue)) {
@@ -83,16 +82,16 @@ export const assignDeep = (...args: any[]) => {
 };
 
 
-export const style = function () {
+export const style = (...args: Record<string, any>[]) => {
     let styles = {};
-    for (var i = 0; i < arguments.length; i++) {
-        styles = assign(styles, arguments[i]);
+    for (let i = 0; i < args.length; i++) {
+        styles = { ...styles, ...args[i] };
     }
     return styles;
 };
 
 export const getWebLocation = (url: string) => {
-    var match =
+    const match =
         isNonEmptyString(url) &&
         url.match(
             /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/
@@ -121,14 +120,14 @@ export const fixUrl = (url: string, protocol: string, host: string): string => {
     return url;
 };
 
-export const getSubObject = (obj: Object | null | undefined, props: string): Object | null => {
+export const getSubObject = (obj: Record<string, any> | null | undefined, props: string): Record<string, any> | null => {
     if (isNil(obj)) return null;
     const indirectEval = eval;
     return (indirectEval(`(o)=>(({${props}}) => ({${props}}))(o)`))(obj);
 };
 
 export const timeDiff = (d1: Date, d2: Date, type: 'second' | 'sec' | 's' | 'minute' | 'min' | 'm' | 'hour' | 'hr' | 'h') => {
-    var diffT = d1.getTime() - d2.getTime();
+    const diffT = d1.getTime() - d2.getTime();
     if (type == "second" || type == "sec" || type == "s")
         return Math.floor(diffT / 1000);
     if (type == "minute" || type == "min" || type == "m")
@@ -154,7 +153,7 @@ export const serialNumber = () => {
     let result = "";
     let i = 0;
     while (i < c.length) {
-        let n =
+        const n: number =
             i < c.length - 1
                 ? parseInt(c[i]) * 10 + parseInt(c[i + 1])
                 : parseInt(c[i]);
@@ -182,7 +181,7 @@ export const ttl = (mins: number) => {
     return Math.floor(date / 1000) + (mins * 60);
 };
 
-export const getObjectPropValue = (obj: Object | null | undefined, key: string, caseSensitive?: boolean) => {
+export const getObjectPropValue = (obj: Record<string, any> | null | undefined, key: string, caseSensitive?: boolean) => {
     let value = null;
 
     if (!isNonEmptyString(key)) return value;
@@ -201,19 +200,19 @@ export const getObjectPropValue = (obj: Object | null | undefined, key: string, 
     return value;
 };
 
-export const getIntValueOfObject = (obj: Object | null | undefined, key: string, defaultValue?: number | null | undefined) => {
+export const getIntValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: number | null | undefined) => {
     if (!isNonEmptyString(defaultValue)) defaultValue = null;
     const val = getPropValueOfObject(obj, key);
     return !isNaN(parseInt(val)) ? parseInt(val) : defaultValue;
 };
 
-export const getFloatValueOfObject = (obj: Object | null | undefined, key: string, defaultValue?: number | null | undefined) => {
+export const getFloatValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: number | null | undefined) => {
     if (!isNonEmptyString(defaultValue)) defaultValue = null;
     const val = getPropValueOfObject(obj, key);
     return !isNaN(parseFloat(val)) ? parseFloat(val) : defaultValue;
 };
 
-export const getBooleanValueOfObject = (obj: Object | null | undefined, key: string, defaultValue?: boolean | null | undefined) => {
+export const getBooleanValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: boolean | null | undefined) => {
     if (!isNonEmptyString(defaultValue)) defaultValue = null;
     const val = getPropValueOfObject(obj, key);
     if (`${val}`.toLowerCase() == 'true') return true;
@@ -221,7 +220,7 @@ export const getBooleanValueOfObject = (obj: Object | null | undefined, key: str
     return defaultValue;
 };
 
-export const getArrayPropValueOfObject = (obj: Object | null | undefined, key: string, defaultValue: any[] | null | undefined) => {
+export const getArrayPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue: any[] | null | undefined) => {
     if (!isObject(defaultValue)) defaultValue = null;
     const val = getPropValueOfObject(obj, key);
     return isArray(val) ? val : isNonEmptyString(val) ? JSON.parse(val) : defaultValue;
@@ -229,7 +228,7 @@ export const getArrayPropValueOfObject = (obj: Object | null | undefined, key: s
 
 
 
-export const getPropValueOfObject = (obj: Object | null | undefined , key: string) => {
+export const getPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string) => {
 
     if (!isObject(obj) || !isNonEmptyString(key)) return null;
     let v = obj[key];
@@ -240,14 +239,14 @@ export const getPropValueOfObject = (obj: Object | null | undefined , key: strin
 
     if (!v) {
         //try scan all props
-        for (var p in obj) {
+        for (const p in obj) {
             if (p.toLowerCase() == key.toLowerCase()) return obj[p];
         }
     }
     return v;
 };
 
-let _memoryCache: any = {};
+const _memoryCache: Record<string, any> = {};
 
 export const getMemoryCache = (key: string) => {
 
@@ -272,7 +271,6 @@ export const getMemoryCache = (key: string) => {
 export const setMemoryCache = (key: string, value: any, expireMinutes: number) => {
 
     if (!isNonEmptyString(key)) return null;
-    _memoryCache[key] = {};
     if (expireMinutes > 0) {
         _memoryCache[key].ttl = ttl(expireMinutes);
     }
@@ -338,13 +336,13 @@ export const isFloatString = (v: string): boolean => {
 
 export const isEmail = (email: string): boolean => {
     if (isNonEmptyString(email)) email = email.trim().replace(/ /g, "");
-    var pattern = new RegExp(
+    const pattern = new RegExp(
         /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
     );
     return pattern.test(email);
 };
 
-export const isPassword = (v: string, settings?:any) => {
+export const isPassword = (v: string, settings?: any) => {
 
     if (!isObject(settings)) settings = {};
 
@@ -383,13 +381,13 @@ export const isPassword = (v: string, settings?:any) => {
     return result;
 };
 
-export const utcISOString = (dt:Date, minutesDiff:number):string => {
+export const utcISOString = (dt: Date, minutesDiff: number): string => {
     if (!dt) dt = new Date();
     if (isNumber(minutesDiff)) dt.setMinutes(dt.getMinutes() + minutesDiff);
     return dt.toISOString();
 };
 
-export const utcMaxISOString = ():string => {
-    return utcISOString(new Date("9999-12-31T23:59:59.999Z"),0);
+export const utcMaxISOString = (): string => {
+    return utcISOString(new Date("9999-12-31T23:59:59.999Z"), 0);
 };
 
