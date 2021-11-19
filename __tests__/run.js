@@ -31,7 +31,6 @@ describe('assignDeep', () => {
         const b = { r: { a: 2, b: 1 } };
         const result = assignDeep(a, b);
         delete result.r.c;
-        console.log({a, result})
         expect(
             JSON.stringify(result) == JSON.stringify({ r: { a: 2, b: 1 } } ) && 
             JSON.stringify(a) == JSON.stringify({ r: { a: 1, c:1 } })
