@@ -1,6 +1,6 @@
 
 const supertest = require('supertest');
-const { isNonEmptyString, assignDeep } = require('../.build/index');
+const { isNonEmptyString, assignDeep } = require('../build/index');
 
 describe('isNonEmptyString', () => {
     it('good string', async () => {
