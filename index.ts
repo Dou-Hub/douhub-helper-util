@@ -6,6 +6,9 @@
 import Constants from './libs/constants';
 import Colors from './libs/colors';
 import Core from './libs/core';
+export {
+    getBaseDomain
+} from './libs/web';
 
 export const isNonEmptyString = Core.isNonEmptyString;
 export const isGuid = Core.isGuid;

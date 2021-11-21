@@ -1,13 +1,12 @@
 {
   "name": "douhub-helper-util",
-  "version": "1.0.10",
+  "version": "1.0.14",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "files": [
-    "libs"
-  ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prebuildpackage": "npm run compile",
+    "buildpackage": "npm pack"
   },
   "repository": {
     "type": "git",
