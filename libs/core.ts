@@ -361,7 +361,7 @@ export const isPassword = (v: string, settings?: any) => {
     return result;
 };
 
-export const utcISOString = (dt: Date, minutesDiff: number): string => {
+export const utcISOString = (dt?: Date, minutesDiff?: number): string => {
     if (!dt) dt = new Date();
     if (isNumber(minutesDiff)) dt.setMinutes(dt.getMinutes() + minutesDiff);
     return dt.toISOString();

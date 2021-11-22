@@ -10,6 +10,13 @@ export {
     getBaseDomain
 } from './libs/web';
 
+export {
+    getFileType,
+    getContentType,
+    getAcceptMIMEs,
+    getAcceptFileExtensions
+} from './libs/file';
+
 export const isNonEmptyString = Core.isNonEmptyString;
 export const isGuid = Core.isGuid;
 export const isPhoneNumber = Core.isPhoneNumber;
