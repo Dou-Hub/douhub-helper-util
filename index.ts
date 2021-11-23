@@ -31,6 +31,7 @@ export const timeDiff = Core.timeDiff;
 export const serialNumber = Core.serialNumber;
 export const ttl = Core.ttl;
 export const getObjectPropValue = Core.getObjectPropValue;
+export const getBooleanPropValue = Core.getBooleanPropValue;
 export const getIntValueOfObject = Core.getIntValueOfObject;
 export const getArrayPropValueOfObject = Core.getArrayPropValueOfObject;
 export const getPropValueOfObject = Core.getPropValueOfObject;

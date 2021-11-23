@@ -3,7 +3,7 @@
 //  This source code is licensed under the MIT license.
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
 
-import { isObject, isNil, isString, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction } from "lodash";
+import { isObject, isNil, isString, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 import Constants from './constants';
@@ -184,34 +184,45 @@ export const getObjectPropValue = (obj: Record<string, any> | null | undefined, 
     return value;
 };
 
+
+export const getBooleanPropValue = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: boolean) => {
+    if (!isBoolean(defaultValue)) defaultValue = undefined;
+    const val = getPropValueOfObject(obj, key);
+    if (isBoolean(val)) return val;
+    if (isString(val)) return val.toLowerCase().trim()=='true';
+    return defaultValue;
+};
+
+
 export const getIntValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: number | null | undefined) => {
-    if (!isNonEmptyString(defaultValue)) defaultValue = null;
+    if (!isNonEmptyString(defaultValue)) defaultValue = undefined;
     const val = getPropValueOfObject(obj, key);
     return !isNaN(parseInt(val)) ? parseInt(val) : defaultValue;
 };
 
 export const getFloatValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: number | null | undefined) => {
-    if (!isNonEmptyString(defaultValue)) defaultValue = null;
+    if (!isNonEmptyString(defaultValue)) defaultValue = undefined;
     const val = getPropValueOfObject(obj, key);
     return !isNaN(parseFloat(val)) ? parseFloat(val) : defaultValue;
 };
 
 export const getBooleanValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: boolean | null | undefined) => {
-    if (!isNonEmptyString(defaultValue)) defaultValue = null;
+    if (!isNonEmptyString(defaultValue)) defaultValue = undefined;
     const val = getPropValueOfObject(obj, key);
     if (`${val}`.toLowerCase() == 'true') return true;
     if (`${val}`.toLowerCase() == 'false') return false;
     return defaultValue;
 };
 
-export const getArrayPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue: any[] | null | undefined) => {
-    if (!isObject(defaultValue)) defaultValue = null;
+export const getArrayPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: any[] | null | undefined) => {
+    if (!isObject(defaultValue)) defaultValue = undefined;
     const val = getPropValueOfObject(obj, key);
     return isArray(val) ? val : isNonEmptyString(val) ? JSON.parse(val) : defaultValue;
 };
 
-export const getPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string) => {
-
+export const getPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: any | null | undefined) => {
+  
+    if (isNil(defaultValue)) defaultValue = undefined;
     if (!isObject(obj) || !isNonEmptyString(key)) return null;
     let v = obj[key];
     if (!v) key = key.replace(/-/g, '');
@@ -387,6 +398,7 @@ export default {
     serialNumber,
     ttl,
     getObjectPropValue,
+    getBooleanPropValue,
     getIntValueOfObject,
     getArrayPropValueOfObject,
     getPropValueOfObject,
