@@ -3,7 +3,7 @@
 //  This source code is licensed under the MIT license.
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
 
-import { isObject, isNil, isString, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
+import { isObject as _isObject, isNil, isString, without, map, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 import Constants from './constants';
@@ -45,11 +45,11 @@ export const assignDeep = (...args: any[]) => {
     const result: Record<string, any> = {};
     for (let i = 0; i < args.length; i++) {
         const item: any = args[i];
-        if (isObject(item)) {
+        if (_isObject(item)) {
             const objItem: Record<string, any> = item;
             for (const p in objItem) {
                 const newPropValue = objItem[p];
-                if (isObject(newPropValue)) {
+                if (_isObject(newPropValue)) {
                     if (isArray(newPropValue)) {
                         result[p] = newPropValue;
                     }
@@ -215,7 +215,7 @@ export const getBooleanValueOfObject = (obj: Record<string, any> | null | undefi
 };
 
 export const getArrayPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: any[] | null | undefined) => {
-    if (!isObject(defaultValue)) defaultValue = undefined;
+    if (!_isObject(defaultValue)) defaultValue = undefined;
     const val = getPropValueOfObject(obj, key);
     return isArray(val) ? val : isNonEmptyString(val) ? JSON.parse(val) : defaultValue;
 };
@@ -223,7 +223,7 @@ export const getArrayPropValueOfObject = (obj: Record<string, any> | null | unde
 export const getPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: any | null | undefined) => {
   
     if (isNil(defaultValue)) defaultValue = undefined;
-    if (!isObject(obj) || !isNonEmptyString(key)) return null;
+    if (!_isObject(obj) || !isNonEmptyString(key)) return null;
     let v = obj[key];
     if (!v) key = key.replace(/-/g, '');
     if (!v) v = obj[key.toLowerCase()];
@@ -295,7 +295,7 @@ export const isEmptyGuid = (v: string) => {
 
 export const checkToTrue = (js: string, props: any): boolean => {
 
-    if (!isObject(props)) props = {};
+    if (!_isObject(props)) props = {};
 
     try {
         const func = isFunction(props.jsEvalFunction) ? props.jsEvalFunction(js) : null;
@@ -335,7 +335,7 @@ export const isEmail = (email: string): boolean => {
 
 export const isPassword = (v: string, settings?: any) => {
 
-    if (!isObject(settings)) settings = {};
+    if (!_isObject(settings)) settings = {};
 
     const {
         needLowerCaseLetter,
@@ -383,6 +383,68 @@ export const utcMaxISOString = (): string => {
 };
 
 
+export const formatString = (...args: string[]) => {
+    if (args.length == 0) return null;
+    let s = args[0];
+    for (var i = 1; i < args.length; i++) {
+        s = s.replace(/\{0\}/g, args[i]);
+    }
+    return s;
+};
+
+//the isObject from lodash will cause error from typescript
+//this one will not
+export const isObject=(v:any)=>{
+    return _isObject(v)?true:false;
+}
+
+export const removeNoValueProperty = (data: Record<string, any>, removeEmptyString: boolean): Record<string, any> => {
+    if (isArray(data)) {
+        return without(
+            map(data, (r) => {
+                return r === undefined ||
+                    r === null ||
+                    (r === "" && removeEmptyString)
+                    ? null
+                    : _isObject(r)
+                        ? removeNoValueProperty(r, removeEmptyString)
+                        : r;
+            }),
+            null
+        );
+    }
+
+    for (var p in data) {
+        const v = data[p];
+
+        if (v === undefined || v === null || (v === "" && removeEmptyString)) {
+            delete data[p];
+        } else {
+            if (isArray(v)) {
+                data[p] = without(
+                    map(v, (r) => {
+                        return r === undefined ||
+                            r === null ||
+                            (r === "" && removeEmptyString)
+                            ? null
+                            : _isObject(r)
+                                ? removeNoValueProperty(r, removeEmptyString)
+                                : r;
+                    }),
+                    null
+                );
+            } else {
+                if (_isObject(v)) {
+                    data[p] = removeNoValueProperty(v, removeEmptyString);
+                }
+            }
+        }
+    }
+
+    return data;
+};
+
+
 export default {
     isNonEmptyString,
     isGuid,
@@ -413,5 +475,7 @@ export default {
     isEmail,
     isPassword,
     utcISOString,
-    utcMaxISOString
+    utcMaxISOString,
+    removeNoValueProperty,
+    formatString,
 }

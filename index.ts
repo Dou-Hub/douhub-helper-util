@@ -17,36 +17,41 @@ export {
     getAcceptFileExtensions
 } from './libs/file';
 
-export const isNonEmptyString = Core.isNonEmptyString;
-export const isGuid = Core.isGuid;
-export const isPhoneNumber = Core.isPhoneNumber;
-export const isEmptyString = Core.isEmptyString;
-export const newGuid = Core.newGuid;
-export const assignDeep = Core.assignDeep;
-export const assignStyles = Core.assignStyles;
-export const getWebLocation = Core.getWebLocation;
-export const fixUrl = Core.fixUrl;
-export const getSubObject = Core.getSubObject;
-export const timeDiff = Core.timeDiff;
-export const serialNumber = Core.serialNumber;
-export const ttl = Core.ttl;
-export const getObjectPropValue = Core.getObjectPropValue;
-export const getBooleanPropValue = Core.getBooleanPropValue;
-export const getIntValueOfObject = Core.getIntValueOfObject;
-export const getArrayPropValueOfObject = Core.getArrayPropValueOfObject;
-export const getPropValueOfObject = Core.getPropValueOfObject;
-export const getMemoryCache = Core.getMemoryCache;
-export const setMemoryCache = Core.setMemoryCache;
-export const cleanGuid = Core.cleanGuid;
-export const sameGuid = Core.sameGuid;
-export const isEmptyGuid = Core.isEmptyGuid;
-export const checkToTrue = Core.checkToTrue;
-export const isIntString = Core.isIntString;
-export const isFloatString = Core.isFloatString;
-export const isEmail = Core.isEmail;
-export const isPassword = Core.isPassword;
-export const utcISOString = Core.utcISOString;
-export const utcMaxISOString = Core.utcMaxISOString;
+export {
+    isNonEmptyString,
+    isGuid,
+    isPhoneNumber,
+    isEmptyString,
+    newGuid,
+    assignDeep,
+    assignStyles,
+    getWebLocation,
+    fixUrl,
+    getSubObject,
+    timeDiff,
+    serialNumber,
+    ttl,
+    getObjectPropValue,
+    getBooleanPropValue,
+    getIntValueOfObject,
+    getArrayPropValueOfObject,
+    getPropValueOfObject,
+    getMemoryCache,
+    setMemoryCache,
+    cleanGuid,
+    sameGuid,
+    isEmptyGuid,
+    checkToTrue,
+    isIntString,
+    isFloatString,
+    isEmail,
+    isPassword,
+    utcISOString,
+    utcMaxISOString,
+    formatString,
+    removeNoValueProperty,
+    isObject
+} from './libs/core';
 
 export const colorByName = Colors.colorByName;
 export const rgbToHex = Colors.rgbToHex;
