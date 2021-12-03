@@ -26,8 +26,8 @@ export const isGuid = (v: any): boolean => {
 };
 
 export const isPhoneNumber = (n: any): boolean => {
-    if (isNonEmptyString(n)) n = n.trim().replace(/ /g, "");
-    return isValidNumber(n);
+    if (!isNonEmptyString(n)) return false;
+    return isValidNumber(n.trim().replace(/ /g, ""));
 };
 
 export const isEmptyString = (s: any, trim?: boolean): boolean => {
