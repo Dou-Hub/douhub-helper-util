@@ -344,26 +344,29 @@ export const isPassword = (v: string, settings?: any) => {
         needSepcialChar,
         minLen } = settings;
 
-    if (!isNonEmptyString(v)) return false;
-
+  
     if (isNonEmptyString(v)) v = v.trim().replace(/ /g, "");
+    if (!isNonEmptyString(v)) return false;
 
     if (v.length < (!isInteger(minLen) ? 8 : minLen)) return false;
 
-    let result = false;
+    let result = true;
 
     if (needDigit) {
         result = new RegExp(/^(?=.*[\d])[\w!@#$%.^&*]+$/).test(v);
         if (!result) console.log('Password does not contain digit.');
     }
+
     if (result && needUpperCaseLetter) {
         result = new RegExp(/^(?=.*[A-Z])[\w!@#$%.^&*]+$/).test(v);
         if (!result) console.log('Password does not contain uppercase letter.');
     }
+    
     if (result && needLowerCaseLetter) {
         result = new RegExp(/^(?=.*[a-z])[\w!@#$%.^&*]+$/).test(v);
         if (!result) console.log('Password does not contain lowercase letter.');
     }
+
     if (result && needSepcialChar) {
         result = new RegExp(/^(?=.*[!@#$%^&*])[\w!@#$%.^&*]+$/).test(v);
         if (!result) console.log('Password does not contain special charactors.');
