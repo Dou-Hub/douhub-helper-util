@@ -456,7 +456,7 @@ export const APPTEXTCOLORS: Record<string, string> = {
     light: '#818182'
 }
 
-export const colorByName = (name: string, lvl: number, alpha: string) => {
+export const colorByName = (name: string, lvl?: number, alpha?: string) => {
     if (!lvl) lvl = 500;
     let color = BASECOLORS[name];
     if (!color) color = BASECOLORS['lightBlue'];
