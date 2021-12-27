@@ -8,8 +8,13 @@ import Colors from './libs/colors';
 
 export const _window: any = typeof window !== "undefined" ? window : {};
 export const _process: any = typeof process !== "undefined" ? process : {};;
+export const _track = `${_process?.env?.TRACK}`.toLowerCase() == 'true';
 
 export {
+    getWebQueryValue,
+    setWebQueryValue,
+    getWebLocation,
+    fixUrl,
     getBaseDomain
 } from './libs/web';
 
@@ -28,8 +33,6 @@ export {
     newGuid,
     assignDeep,
     assignStyles,
-    getWebLocation,
-    fixUrl,
     getSubObject,
     timeDiff,
     serialNumber,
@@ -55,6 +58,16 @@ export {
     removeNoValueProperty,
     isObject
 } from './libs/core';
+
+export {
+    getDisplay,
+    getMedia,
+    getContent,
+    getAbstract,
+    getFullName,
+    getEmailAddress,
+    getAddress
+} from './libs/record';
 
 export const colorByName = Colors.colorByName;
 export const rgbToHex = Colors.rgbToHex;

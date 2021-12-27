@@ -75,35 +75,6 @@ export const assignStyles = (...args: Record<string, any>[]) => {
     return styles;
 };
 
-export const getWebLocation = (url: string) => {
-    const match =
-        isNonEmptyString(url) &&
-        url.match(
-            /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/
-        );
-    return (
-        match && {
-            url,
-            protocol: match[1],
-            host: match[3],
-            port: match[4],
-            path: match[5],
-            query: match[6].replace("?", ""),
-            hash: match[7],
-        }
-    );
-};
-
-export const fixUrl = (url: string, protocol: string, host: string): string => {
-
-    if (!isNonEmptyString(protocol)) protocol = 'https:';
-    if (url.indexOf('//') == 0) {
-        //url = url.replace('//', '/');
-        return `${protocol}${url}`;
-    }
-    if (url.indexOf('/') == 0) url = `${protocol}//${host}${url}`;
-    return url;
-};
 
 export const getSubObject = (obj: Record<string, any> | null | undefined, props: string): Record<string, any> | null => {
     if (isNil(obj)) return null;
@@ -456,8 +427,6 @@ export default {
     newGuid,
     assignDeep,
     assignStyles,
-    getWebLocation,
-    fixUrl,
     getSubObject,
     timeDiff,
     serialNumber,
