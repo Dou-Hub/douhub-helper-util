@@ -1,9 +1,9 @@
 import {isNumber} from 'lodash';
 import {isNonEmptyString, isObject,  isEmail} from './core';
 
-export const getDisplay = (record:Record<string,any>, maxLength?:number): string => {
+export const getRecordDisplay = (record:Record<string,any>, maxLength?:number): string => {
     if (!isObject(record)) return '';
-    let result = getFullName(record);
+    let result = getRecordFullName(record);
     if (!isNonEmptyString(result) && isNonEmptyString(record.displayValue)) result = record.displayValue;
     const number = !isNonEmptyString(result) && isNonEmptyString(record.number) ? `${record.number} - ` : '';
     if (!isNonEmptyString(result) && isNonEmptyString(record.title)) result = `${number}${record.title}`;
@@ -20,7 +20,7 @@ export const getDisplay = (record:Record<string,any>, maxLength?:number): string
     return result.replace(/\n/g, ' ').replace(/\r/g, ' ').trim();
 };
 
-export const getAbstract = (record:Record<string,any>, maxLength?:number, includeContent?:boolean): string => {
+export const getRecordAbstract = (record:Record<string,any>, maxLength?:number, includeContent?:boolean): string => {
     if (!isObject(record)) return '';
     let result = '';
     if (result.length == 0 && isNonEmptyString(record.summary)) result = record.summary;
@@ -41,7 +41,7 @@ export const getAbstract = (record:Record<string,any>, maxLength?:number, includ
     return result.replace(/\n/g, ' ').replace(/\r/g, ' ');
 };
 
-export const getAddress = (record:Record<string,any>, prefix:string): string => {
+export const getRecordAddress = (record:Record<string,any>, prefix:string): string => {
 
     if (!isObject(record)) return '';
 
@@ -60,7 +60,7 @@ export const getAddress = (record:Record<string,any>, prefix:string): string => 
     return '';
 };
 
-export const getContent = (record:Record<string,any>):string => {
+export const getRecordContent = (record:Record<string,any>):string => {
     if (!isObject(record)) return "";
     if (isNonEmptyString(record.content)) return record.content;
     if (isNonEmptyString(record.description)) return record.description;
@@ -68,7 +68,7 @@ export const getContent = (record:Record<string,any>):string => {
     return "";
 };
 
-export const getMedia = (record:Record<string,any>):string => {
+export const getRecordMedia = (record:Record<string,any>):string => {
     if (!isObject(record)) return "";
     if (isNonEmptyString(record.media)) return record.media;
     if (isNonEmptyString(record.photoUrl)) return record.photoUrl;
@@ -76,7 +76,7 @@ export const getMedia = (record:Record<string,any>):string => {
     return "";
 };
 
-export const getFullName = (user:Record<string,any>):string => {
+export const getRecordFullName = (user:Record<string,any>):string => {
     if (!isObject(user)) return "";
 
     const email = isNonEmptyString(user.email) ? user.email.trim() : "";
@@ -106,9 +106,9 @@ export const getFullName = (user:Record<string,any>):string => {
     return fullName;
 };
 
-export const getEmailAddress = (record:Record<string,any>, emailOnly?:boolean): string|undefined|null => {
+export const getRecordEmailAddress = (record:Record<string,any>, emailOnly?:boolean): string|undefined|null => {
     if (isObject(record) && isEmail(record.email)) {
-        const fullName = getFullName(record);
+        const fullName = getRecordFullName(record);
         if (isNonEmptyString(fullName)) {
             return `${fullName} <${record.email}>`;
         }
@@ -124,4 +124,25 @@ export const getEmailAddress = (record:Record<string,any>, emailOnly?:boolean): 
     }
 
     return null;
+};
+
+export const getRecordPageMetadata = (record: Record<string,any>, settings?:{siteName?:string}) => {
+
+    const restult: Record<string,any>= {};
+
+    const recordDisplay = getRecordDisplay(record);
+    if (!isNonEmptyString(recordDisplay)) {
+        restult.title = isObject(settings) && settings?.siteName? `${settings?.siteName} - ${getRecordAbstract(record, 64)}`: getRecordAbstract(record, 64);
+    }
+    else {
+        restult.title = isObject(settings) && settings?.siteName? `${settings?.siteName} - ${recordDisplay}`: recordDisplay;
+    }
+
+    restult.id = record.id;
+    restult.description = getRecordAbstract(record, 128);
+    restult.type = 'article';
+    const media = getRecordMedia(record);
+    if (isNonEmptyString(media)) restult.image = media;
+    
+    return restult;
 };

@@ -60,14 +60,20 @@ export {
 } from './libs/core';
 
 export {
-    getDisplay,
-    getMedia,
-    getContent,
-    getAbstract,
-    getFullName,
-    getEmailAddress,
-    getAddress
+    getRecordDisplay,
+    getRecordMedia,
+    getRecordContent,
+    getRecordAbstract,
+    getRecordFullName,
+    getRecordEmailAddress,
+    getRecordAddress,
+    getRecordPageMetadata
 } from './libs/record';
+
+export {
+    getEntity,
+    getEntityTypeFromFileName
+} from './libs/metadata';
 
 export const colorByName = Colors.colorByName;
 export const rgbToHex = Colors.rgbToHex;
