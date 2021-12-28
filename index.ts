@@ -67,7 +67,8 @@ export {
     getRecordFullName,
     getRecordEmailAddress,
     getRecordAddress,
-    getRecordPageMetadata
+    getRecordPageMetadata,
+    applyRecordSlug
 } from './libs/record';
 
 export {

@@ -7,8 +7,20 @@ import { isObject as _isObject, isNil, isString, without, map, isArray, isNumber
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 import Constants from './constants';
+import slugify from 'slugify';
 
 const {GUID_EMPTY} = Constants;
+
+export const slug = (text: string) => {
+    return !isNonEmptyString(text) ? null : slugify(text.replace(/_/g, '-'), {
+        lower: true,
+        remove: /[=:?#@!$&'()*+,;"<>%{}|\\^`]/g
+    })
+        .replace(/\./g, '-')
+        .replace(/\//g, '-')
+        .toLowerCase();
+};
+
 
 export const isNonEmptyString = (s: any, trim?: boolean): boolean => {
     return (

@@ -1,5 +1,5 @@
-import {isNumber} from 'lodash';
-import {isNonEmptyString, isObject,  isEmail} from './core';
+import {isNumber, isArray, find} from 'lodash';
+import {isNonEmptyString, isObject,  isEmail, slug} from './core';
 
 export const getRecordDisplay = (record:Record<string,any>, maxLength?:number): string => {
     if (!isObject(record)) return '';
@@ -143,6 +143,20 @@ export const getRecordPageMetadata = (record: Record<string,any>, settings?:{sit
     restult.type = 'article';
     const media = getRecordMedia(record);
     if (isNonEmptyString(media)) restult.image = media;
-    
+
     return restult;
+};
+
+
+export const applyRecordSlug = (record:Record<string,any>): Record<string,any> => {
+    const id = record.id;
+    const display = getRecordDisplay(record);
+    if (!isArray(record.slugs)) record.slugs = [];
+    const curSlug = slug(`${display} ${id.split('-')[1]}`);
+    if (!find(record.slugs, (slug) => slug == curSlug)) {
+        record.slugs.push(curSlug);
+    }
+    
+    record.slug = curSlug;
+    return record;
 };
