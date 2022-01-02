@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 import Constants from './constants';
 import slugify from 'slugify';
 
-const {GUID_EMPTY} = Constants;
+const { GUID_EMPTY } = Constants;
 
 export const slug = (text: string) => {
     return !isNonEmptyString(text) ? null : slugify(text.replace(/_/g, '-'), {
@@ -172,7 +172,7 @@ export const getBooleanPropValue = (obj: Record<string, any> | null | undefined,
     if (!isBoolean(defaultValue)) defaultValue = undefined;
     const val = getPropValueOfObject(obj, key);
     if (isBoolean(val)) return val;
-    if (isString(val)) return val.toLowerCase().trim()=='true';
+    if (isString(val)) return val.toLowerCase().trim() == 'true';
     return defaultValue;
 };
 
@@ -204,7 +204,7 @@ export const getArrayPropValueOfObject = (obj: Record<string, any> | null | unde
 };
 
 export const getPropValueOfObject = (obj: Record<string, any> | null | undefined, key: string, defaultValue?: any | null | undefined) => {
-  
+
     if (isNil(defaultValue)) defaultValue = undefined;
     if (!_isObject(obj) || !isNonEmptyString(key)) return null;
     let v = obj[key];
@@ -327,7 +327,7 @@ export const isPassword = (v: string, settings?: any) => {
         needSepcialChar,
         minLen } = settings;
 
-  
+
     if (isNonEmptyString(v)) v = v.trim().replace(/ /g, "");
     if (!isNonEmptyString(v)) return false;
 
@@ -344,7 +344,7 @@ export const isPassword = (v: string, settings?: any) => {
         result = new RegExp(/^(?=.*[A-Z])[\w!@#$%.^&*]+$/).test(v);
         if (!result) console.log('Password does not contain uppercase letter.');
     }
-    
+
     if (result && needLowerCaseLetter) {
         result = new RegExp(/^(?=.*[a-z])[\w!@#$%.^&*]+$/).test(v);
         if (!result) console.log('Password does not contain lowercase letter.');
@@ -380,8 +380,19 @@ export const formatString = (...args: string[]) => {
 
 //the isObject from lodash will cause error from typescript
 //this one will not
-export const isObject=(v:any)=>{
-    return _isObject(v)?true:false;
+export const isObject = (v: any): boolean => {
+    return _isObject(v) ? true : false;
+}
+
+export const isObjectString = (s: string): boolean => {
+    try {
+        JSON.parse(s);
+        return true;
+    }
+    catch
+    {
+        return false;
+    }
 }
 
 export const removeNoValueProperty = (data: Record<string, any>, removeEmptyString: boolean): Record<string, any> => {

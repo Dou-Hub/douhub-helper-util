@@ -56,7 +56,8 @@ export {
     utcMaxISOString,
     formatString,
     removeNoValueProperty,
-    isObject
+    isObject,
+    isObjectString
 } from './libs/core';
 
 export {
