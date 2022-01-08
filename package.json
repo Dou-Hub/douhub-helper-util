@@ -1,7 +1,7 @@
 {
   "name": "douhub-helper-util",
   "licence": "MIT",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
@@ -14,6 +14,7 @@
     "url": "git+https://github.com/dou-hub/douhub-helper-util.git"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "is-url": "^1.2.4",
     "js-base64": "^3.7.2",
     "libphonenumber-js": "^1.9.42",

@@ -21,6 +21,7 @@ export {
 export {
     getFileType,
     getContentType,
+    uploadToS3,
     getAcceptMIMEs,
     getAcceptFileExtensions
 } from './libs/file';

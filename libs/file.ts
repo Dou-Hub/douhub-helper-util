@@ -2,6 +2,10 @@
 // 
 //  This source code is licensed under the MIT license.
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
+
+import axios from 'axios';
+import { _track } from '../index';
+
 export const getFileType = (fileName: string): string => {
 
     const ext = fileName.split('.')[fileName.split('.').length - 1].toLowerCase();
@@ -31,6 +35,24 @@ export const getFileType = (fileName: string): string => {
 
     return 'Document';
 }
+
+
+export const uploadToS3 = async (url: string, fileName: string, data: any) => {
+    try {
+        let config: any = {
+            url: url,
+            method: 'put',
+            headers: {
+                'Content-Type': getContentType(fileName),
+            },
+            data
+        };
+        return await axios.request(config);
+    } catch (err) {
+        if (_track) console.log('From api call helper: ', err);
+        throw new Error('API request failed. check console')
+    }
+};
 
 export const getContentType = (fileName: string): string => {
 
