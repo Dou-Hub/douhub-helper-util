@@ -58,7 +58,8 @@ export {
     formatString,
     removeNoValueProperty,
     isObject,
-    isObjectString
+    isObjectString,
+    groupItems
 } from './libs/core';
 
 export {

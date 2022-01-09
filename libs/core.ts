@@ -3,7 +3,7 @@
 //  This source code is licensed under the MIT license.
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
 
-import { isObject as _isObject, isNil, isString, without, map, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
+import { isObject as _isObject, isNil, isString, sortBy, without, map, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 import Constants from './constants';
@@ -442,35 +442,62 @@ export const removeNoValueProperty = (data: Record<string, any>, removeEmptyStri
 };
 
 
-export default {
-    isNonEmptyString,
-    isGuid,
-    isPhoneNumber,
-    isEmptyString,
-    newGuid,
-    assignDeep,
-    assignStyles,
-    getSubObject,
-    timeDiff,
-    serialNumber,
-    ttl,
-    getObjectPropValue,
-    getBooleanPropValue,
-    getIntValueOfObject,
-    getArrayPropValueOfObject,
-    getPropValueOfObject,
-    getMemoryCache,
-    setMemoryCache,
-    cleanGuid,
-    sameGuid,
-    isEmptyGuid,
-    checkToTrue,
-    isIntString,
-    isFloatString,
-    isEmail,
-    isPassword,
-    utcISOString,
-    utcMaxISOString,
-    removeNoValueProperty,
-    formatString,
+export const groupItems = (
+    data: Array<Record<string, any>>,
+    groups: Array<Record<string, any>>,
+    propNameForItemGroup?: string,
+    propNameForItemSort?: string)
+    : Array<Record<string, any>> => {
+
+    if (!(isArray(data) && data.length > 0)) return [];
+    propNameForItemGroup = propNameForItemGroup ? propNameForItemGroup : 'group';
+    propNameForItemSort = propNameForItemSort ? propNameForItemSort : 'fullName';
+
+    const result = map(groups, (group) => {
+        return {
+            ...group, data: sortBy(without(map(data, (item: Record<string, any>) => {
+                return propNameForItemGroup && item[propNameForItemGroup] == group.id ? item : null;
+            }), null),
+                (item: Record<string, any>) => {
+                    return propNameForItemSort && item[propNameForItemSort];
+                })
+        };
+    });
+    return result;
 }
+
+
+
+// export default {
+//     isNonEmptyString,
+//     isGuid,
+//     isPhoneNumber,
+//     isEmptyString,
+//     newGuid,
+//     assignDeep,
+//     assignStyles,
+//     getSubObject,
+//     timeDiff,
+//     serialNumber,
+//     ttl,
+//     getObjectPropValue,
+//     getBooleanPropValue,
+//     getIntValueOfObject,
+//     getArrayPropValueOfObject,
+//     getPropValueOfObject,
+//     getMemoryCache,
+//     setMemoryCache,
+//     cleanGuid,
+//     sameGuid,
+//     isEmptyGuid,
+//     checkToTrue,
+//     isIntString,
+//     isFloatString,
+//     isEmail,
+//     isPassword,
+//     utcISOString,
+//     utcMaxISOString,
+//     removeNoValueProperty,
+//     formatString,
+//     groupItems
+// }
