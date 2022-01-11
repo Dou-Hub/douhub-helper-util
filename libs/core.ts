@@ -11,6 +11,18 @@ import slugify from 'slugify';
 
 const { GUID_EMPTY } = Constants;
 
+
+export const stringToColor = (str:string, s?:number, l?:number) => {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    var h = hash % 360;
+    return `hsl(${h}, ${s && s>=0 && s<=100?s:50}%, ${l && l>=0 && l<=100?l:50}%)`;
+  }
+  
+
 export const slug = (text: string) => {
     return !isNonEmptyString(text) ? null : slugify(text.replace(/_/g, '-'), {
         lower: true,

@@ -27,6 +27,8 @@ export {
 } from './libs/file';
 
 export {
+    stringToColor,
+    slug,
     isNonEmptyString,
     isGuid,
     isPhoneNumber,
@@ -60,6 +62,7 @@ export {
     isObject,
     isObjectString,
     groupItems
+    
 } from './libs/core';
 
 export {
