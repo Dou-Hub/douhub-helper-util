@@ -15,8 +15,7 @@
 import { isNonEmptyString, isObject } from "./core";
 import { find } from "lodash";
 
-export function getEntity(solution: Record<string,any>,entityName:string, entityType?:string): Record<string,any>|null
-{
+export function getEntity(solution: Record<string, any>, entityName: string, entityType?: string): Record<string, any> | null {
 
     if (!isNonEmptyString(entityName)) return null;
 

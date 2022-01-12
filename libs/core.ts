@@ -12,16 +12,16 @@ import slugify from 'slugify';
 const { GUID_EMPTY } = Constants;
 
 
-export const stringToColor = (str:string, s?:number, l?:number) => {
+export const stringToColor = (str: string, s?: number, l?: number) => {
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-  
+
     var h = hash % 360;
-    return `hsl(${h}, ${s && s>=0 && s<=100?s:50}%, ${l && l>=0 && l<=100?l:50}%)`;
-  }
-  
+    return `hsl(${h}, ${s && s >= 0 && s <= 100 ? s : 50}%, ${l && l >= 0 && l <= 100 ? l : 50}%)`;
+}
+
 
 export const slug = (text: string) => {
     return !isNonEmptyString(text) ? null : slugify(text.replace(/_/g, '-'), {
@@ -478,7 +478,23 @@ export const groupItems = (
     return result;
 }
 
-
+export const shortenNumber = (num: number, digits: number) => {
+    if (digits < 0) digits = 0;
+    const lookup = [
+        { value: 1, symbol: "" },
+        { value: 1e3, symbol: "k" },
+        { value: 1e6, symbol: "M" },
+        { value: 1e9, symbol: "G" },
+        { value: 1e12, symbol: "T" },
+        { value: 1e15, symbol: "P" },
+        { value: 1e18, symbol: "E" }
+    ];
+    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    var item = lookup.slice().reverse().find(function (item) {
+        return num >= item.value;
+    });
+    return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
+}
 
 // export default {
 //     isNonEmptyString,
