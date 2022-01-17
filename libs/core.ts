@@ -3,7 +3,9 @@
 //  This source code is licensed under the MIT license.
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
 
-import { isObject as _isObject, isNil, isString, sortBy, without, map, isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
+import { isObject as _isObject, isNil, isString, sortBy, without, map,
+    capitalize,
+    isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 import Constants from './constants';
@@ -478,11 +480,11 @@ export const groupItems = (
     return result;
 }
 
-export const shortenNumber = (num: number, digits: number) => {
-    if (digits < 0) digits = 0;
+export const shortenNumber = (num: number, fractionDigits?: number) => {
+    if (!isNumber(fractionDigits) || isNumber(fractionDigits) && fractionDigits < 0) fractionDigits = 1;
     const lookup = [
         { value: 1, symbol: "" },
-        { value: 1e3, symbol: "k" },
+        { value: 1e3, symbol: "K" },
         { value: 1e6, symbol: "M" },
         { value: 1e9, symbol: "G" },
         { value: 1e12, symbol: "T" },
@@ -493,39 +495,50 @@ export const shortenNumber = (num: number, digits: number) => {
     var item = lookup.slice().reverse().find(function (item) {
         return num >= item.value;
     });
-    return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
+    return item ? item && (num / item.value).toFixed(fractionDigits) + item.symbol : "0";
 }
 
-// export default {
-//     isNonEmptyString,
-//     isGuid,
-//     isPhoneNumber,
-//     isEmptyString,
-//     newGuid,
-//     assignDeep,
-//     assignStyles,
-//     getSubObject,
-//     timeDiff,
-//     serialNumber,
-//     ttl,
-//     getObjectPropValue,
-//     getBooleanPropValue,
-//     getIntValueOfObject,
-//     getArrayPropValueOfObject,
-//     getPropValueOfObject,
-//     getMemoryCache,
-//     setMemoryCache,
-//     cleanGuid,
-//     sameGuid,
-//     isEmptyGuid,
-//     checkToTrue,
-//     isIntString,
-//     isFloatString,
-//     isEmail,
-//     isPassword,
-//     utcISOString,
-//     utcMaxISOString,
-//     removeNoValueProperty,
-//     formatString,
-//     groupItems
-// }
+
+export const numberWithCommas = (x:number) => {
+    if (!isNumber(x)) return null;
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+export const formatText = (text:string, format:'lower'|'upper'|'capital'|'capital-first'|'capital-all'|'camel') => {
+    switch (format) {
+        case 'lower': return text.toLowerCase();
+        case 'upper': return text.toUpperCase();
+        case 'capital':
+        case 'capital-first': return capitalize(text);
+        case 'capital-all': return map(text.split(' '), capitalize).join(' ');
+        case 'camel': return camelCase(text);
+        default: return text;
+    }
+};
+
+
+export const readableFileSize = (fileSizeInBytes:number) => {
+    if (!isNumber(fileSizeInBytes)) return "";
+    var i = -1;
+    var byteUnits = [" KB", " MB", " GB", " TB", "PB", "EB", "ZB", "YB"];
+    do {
+        fileSizeInBytes = fileSizeInBytes / 1024;
+        i++;
+    } while (fileSizeInBytes > 1024);
+
+    return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+};
+
+export const formatJSONString = (c: string) => {
+
+    const jsonValue = isNonEmptyString(c) ? JSON.parse(c) : c;
+
+    try {
+        return JSON.stringify(jsonValue, null, 4);
+    }
+    catch (ex) {
+        //console.log({ v, ex })
+    }
+
+    return JSON.stringify(jsonValue);
+};
