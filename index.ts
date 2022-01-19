@@ -83,6 +83,7 @@ export {
 
 export {
     getEntity,
+    getEntityBySlug,
     getEntityTypeFromFileName
 } from './libs/metadata';
 

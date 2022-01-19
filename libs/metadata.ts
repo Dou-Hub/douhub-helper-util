@@ -15,7 +15,8 @@
 import { isNonEmptyString, isObject } from "./core";
 import { find } from "lodash";
 
-export function getEntity(solution: Record<string, any>, entityName: string, entityType?: string): Record<string, any> | null {
+export const getEntity = (solution: Record<string, any>, entityName: string, entityType?: string): Record<string, any> | null =>
+{
 
     if (!isNonEmptyString(entityName)) return null;
 
@@ -33,6 +34,17 @@ export function getEntity(solution: Record<string, any>, entityName: string, ent
     return isObject(entity) ? entity : null;
 };
 
+export const getEntityBySlug = (solution: Record<string, any>, slug: string): Record<string, any> | null =>
+{
+
+    if (!isNonEmptyString(slug)) return null;
+
+    let entity = find(solution.entities, (entity) => {
+        return entity.slug === slug;
+    });
+
+    return isObject(entity) ? entity : null;
+};
 
 export const getEntityTypeFromFileName = (fileName: string): string | null => {
     if (!isNonEmptyString(fileName)) return null;
