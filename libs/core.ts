@@ -13,6 +13,9 @@ import slugify from 'slugify';
 
 const { GUID_EMPTY } = Constants;
 
+export const _process: any = typeof process !== "undefined" ? process : {};;
+export const _track = `${_process?.env?.TRACK}`.toLowerCase() == 'true';
+
 
 export const stringToColor = (str: string, s?: number, l?: number) => {
     var hash = 0;

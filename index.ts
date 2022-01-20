@@ -6,8 +6,6 @@
 import Constants from './libs/constants';
 import Colors from './libs/colors';
 
-export const _process: any = typeof process !== "undefined" ? process : {};;
-export const _track = `${_process?.env?.TRACK}`.toLowerCase() == 'true';
 
 export {
     getWebQueryValue,
@@ -65,9 +63,27 @@ export {
     numberWithCommas,
     formatText,
     readableFileSize,
-    formatJSONString
-    
+    formatJSONString,
+    _process,
+    _track
 } from './libs/core';
+
+
+export {
+    hasRole,
+    checkRecordPrivilege,
+    isSolutionOwner,
+    recordOwnedByUser,
+    recordOwnedByOrganization,
+    checkLicenses,
+    hasLicense,
+    checkPrivileges,
+    checkEntityPrivilege,
+    checkPrivilege,
+    isReader,
+    isAuthor,
+    hasPrivilege
+} from './libs/auth';
 
 export {
     getRecordDisplay,
