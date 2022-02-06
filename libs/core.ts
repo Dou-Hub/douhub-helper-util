@@ -105,8 +105,8 @@ export const assignStyles = (...args: Record<string, any>[]) => {
 };
 
 
-export const getSubObject = (obj: Record<string, any> | null | undefined, props: string): Record<string, any> | null => {
-    if (isNil(obj)) return null;
+export const getSubObject = (obj: Record<string, any> | null | undefined, props: string): Record<string, any> | undefined => {
+    if (isNil(obj)) return undefined;
     const indirectEval = eval;
     return (indirectEval(`(o)=>(({${props}}) => ({${props}}))(o)`))(obj);
 };
