@@ -4,7 +4,7 @@
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
 
 import { isObject as _isObject, isNil, isString, sortBy, without, map,
-    capitalize,
+    capitalize, each,
     isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
@@ -545,3 +545,16 @@ export const formatJSONString = (c: string) => {
 
     return JSON.stringify(jsonValue);
 };
+
+export const deepFlatten = (array: Array<any>): Array<any> => {
+    var result: Array<any> = [];
+    array.forEach(function (elem) {
+        if (Array.isArray(elem)) {
+            result = result.concat(deepFlatten(elem));
+        } else {
+            result.push(elem);
+        }
+    });
+
+    return result;
+}

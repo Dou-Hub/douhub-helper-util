@@ -64,10 +64,22 @@ export {
     formatText,
     readableFileSize,
     formatJSONString,
+    deepFlatten,
     _process,
     _track
 } from './libs/core';
 
+export {
+    getTreeItemAndChildrenIds,
+    getTreeItemHavingPropValue,
+    getTreeItemPath,
+    getTreeItem,
+    insertTreeItem,
+    removeTreeItem,
+    updateTreeItem,
+    replaceTreeItem,
+    updateAllTreeItems
+} from './libs/tree';
 
 export {
     hasRole,
