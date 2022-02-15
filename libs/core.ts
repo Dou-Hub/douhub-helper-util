@@ -507,13 +507,14 @@ export const numberWithCommas = (x:number) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-export const formatText = (text:string, format:'lower'|'upper'|'capital'|'capital-first'|'capital-all'|'camel') => {
+export const formatText = (text:string, format:'lower'|'upper'|'capital'|'capital-first'|'capital-all'|'camel'|'initials') => {
     switch (format) {
         case 'lower': return text.toLowerCase();
         case 'upper': return text.toUpperCase();
         case 'capital':
         case 'capital-first': return capitalize(text);
         case 'capital-all': return map(text.split(' '), capitalize).join(' ');
+        case 'initials': return map(text.split(' '), (t)=>t.length>0?t.charAt(0):'').join(' ');
         case 'camel': return camelCase(text);
         default: return text;
     }
