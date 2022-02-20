@@ -11,7 +11,7 @@ export const getRecordDisplay = (record:Record<string,any>, maxLength?:number): 
     if (!isNonEmptyString(result) && isNonEmptyString(record.text)) result = record.text;
     if (!isNonEmptyString(result) && isNonEmptyString(record.symbol)) result = record.symbol;
     if (!isNonEmptyString(result) && isNonEmptyString(record.code)) result = record.code;
-    if (!isNonEmptyString(result) && isNonEmptyString(record.display)) result = record.display;
+    //if (!isNonEmptyString(result) && isNonEmptyString(record.display)) result = record.display;
     if (!isNonEmptyString(result)) {
         return '';
     }
