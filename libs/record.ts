@@ -76,17 +76,20 @@ export const getRecordMedia = (record:Record<string,any>):string => {
     return "";
 };
 
-export const getRecordFullName = (user:Record<string,any>):string => {
+export const getRecordFullName = (user:Record<string,any>, skipFullNameProp?:boolean):string => {
     if (!isObject(user)) return "";
 
     const email = isNonEmptyString(user.email) ? user.email.trim() : "";
-    let fullName = isNonEmptyString(user.fullName)
+    
+    let fullName = isNonEmptyString(user.fullName) && !skipFullNameProp 
         ? user.fullName.trim()
         : "";
+
     const firstName = isNonEmptyString(user.firstName)
         ? user.firstName.trim()
         : "";
-    const lastName = isNonEmptyString(user.lastName)
+    
+        const lastName = isNonEmptyString(user.lastName)
         ? user.lastName.trim()
         : "";
 
@@ -106,24 +109,20 @@ export const getRecordFullName = (user:Record<string,any>):string => {
     return fullName;
 };
 
-export const getRecordEmailAddress = (record:Record<string,any>, emailOnly?:boolean): string|undefined|null => {
+export const getRecordEmailAddress = (record:Record<string,any>, emailOnly?:boolean): string|undefined => {
+    
+ 
     if (isObject(record) && isEmail(record.email)) {
         const fullName = getRecordFullName(record);
-        if (isNonEmptyString(fullName)) {
+        if (isNonEmptyString(fullName) && !emailOnly) {
             return `${fullName} <${record.email}>`;
         }
         else {
             return record.email;
         }
     }
-    if (isNonEmptyString(record)) {
-        const info = record.split('|');
-        if (isEmail(info[0])) {
-            return info.length > 1 && !emailOnly ? `${record[1]} <${record[0]}>` : record[0];
-        }
-    }
 
-    return null;
+    return undefined;
 };
 
 export const getRecordPageMetadata = (record: Record<string,any>, settings?:{siteName?:string}) => {
