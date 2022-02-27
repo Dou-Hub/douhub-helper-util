@@ -55,6 +55,7 @@ export {
     utcISOString,
     utcMaxISOString,
     formatString,
+    shortenString,
     removeNoValueProperty,
     isObject,
     isObjectString,

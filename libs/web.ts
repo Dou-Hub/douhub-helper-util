@@ -83,8 +83,9 @@ export const getWebQueryValue = (url: string, key: string, defaultValue?: string
     return defaultValue;
 };
 
-export const setWebQueryValue = (url: string, key: string, value: string): string | undefined => {
-    value = isNonEmptyString(value) ? encodeURIComponent(value).replace(/'/g, "%27") : "";
+export const setWebQueryValue = (url: string, key: string, value?: string): string => {
+    const val: string = !isNil(value) && isNonEmptyString(value) ? encodeURIComponent(value).replace(/'/g, '%27') : '';
+    url = url.replace(/[\?]{2,}/ig,'?');
     const lo = getWebLocation(url);
     if (lo && lo.query && lo.query.trim().length > 0) {
         let queries: (string | undefined | null)[] = lo.query.split(`&`);
@@ -94,9 +95,9 @@ export const setWebQueryValue = (url: string, key: string, value: string): strin
             if (isNil(q)) return null;
             const pair = q.split(`=`);
             if (pair.length > 1 && pair[0].toLowerCase() === key.toLowerCase()) {
-                pair[1] = value;
+                pair[1] = val;
                 replaced = true;
-                if (isNonEmptyString(value)) {
+                if (isNonEmptyString(val)) {
                     q = pair.join("=");
                 }
                 else {
@@ -107,11 +108,11 @@ export const setWebQueryValue = (url: string, key: string, value: string): strin
         }), null);
 
         if (!replaced) {
-            queries.push(`${key}=${value}`);
+            queries.push(`${key}=${val}`);
         }
 
         return `${url.split("?")[0]}?${queries.join("&")}`;
     } else {
-        return `${url}?${key}=${value}`;
+        return `${url}?${key}=${val}`;
     }
 };

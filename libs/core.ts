@@ -395,6 +395,10 @@ export const formatString = (...args: string[]) => {
     return s;
 };
 
+export const shortenString = (s:string, l:number): string => {
+    return s.length<l?s:`${s.substring(0,l)} ...`;
+ };
+
 //the isObject from lodash will cause error from typescript
 //this one will not
 export const isObject = (v: any): boolean => {
