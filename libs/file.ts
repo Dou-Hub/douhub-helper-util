@@ -59,14 +59,24 @@ export const getContentType = (fileName: string): string => {
     const ext = fileName.split('.')[fileName.split('.').length - 1].toLowerCase();
     switch (ext.toLowerCase()) {
         case 'doc':
+            {
+                return 'application/msword';
+            }
         case 'docx':
             {
-                return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/excel,application/vnd.ms-excel,application/pdf,text/plain,text/html,text/csv,application/zip,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation';
+                return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; //,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/excel,application/vnd.ms-excel,application/pdf,text/plain,text/html,text/csv,application/zip,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation';
             }
         case 'xls':
+            {
+                return 'application/excel';
+            }
         case 'xlsx':
             {
-                return 'application/excel,application/vnd.ms-excel,text/csv';
+                return 'application/vnd.ms-excel';
+            }
+        case 'csv':
+            {
+                return 'text/csv';
             }
         case 'gif':
         case 'jpg':
@@ -89,13 +99,40 @@ export const getContentType = (fileName: string): string => {
     return 'text/plain';
 }
 
+export const getAcceptExtention = (type: string): string => {
+    switch (type.toLowerCase()) {
+        case 'document':
+            {
+                return '.docx,.doc,.pdf,.xls,.xlsx,txt,.csv,.htm,.html,.ppt,.pptx,.zip';
+            }
+        case 'csv':
+            {
+                return '.csv,text/csv';
+            }
+        case 'photo':
+            {
+                return '.png,.jpeg,.jpg,.gif';
+            }
+        case 'video':
+            {
+                return '.mp4';
+            }
+        case 'audio':
+            {
+                return '.mp3';
+            }
+    }
+
+    return '*';
+}
+
 export const getAcceptMIMEs = (type: string): string => {
     switch (type.toLowerCase()) {
         case 'document':
             {
                 return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/excel,application/vnd.ms-excel,application/pdf,text/plain,text/html,text/csv,application/zip,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation';
             }
-        case 'upload':
+        case 'csv':
             {
                 return 'text/csv';
             }
@@ -106,11 +143,6 @@ export const getAcceptMIMEs = (type: string): string => {
         case 'video':
             {
                 return 'video/mp4';
-            }
-        case 'video-photo':
-        case 'photo-video':
-            {
-                return 'image/gif,image/jpg,image/jpeg,image/png,video/mp4';
             }
         case 'audio':
             {
