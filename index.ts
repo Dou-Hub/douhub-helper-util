@@ -18,6 +18,7 @@ export {
 export {
     getFileType,
     getContentType,
+    getAcceptExtention,
     uploadToS3,
     getAcceptMIMEs,
     getAcceptFileExtensions
@@ -36,6 +37,7 @@ export {
     getSubObject,
     timeDiff,
     serialNumber,
+    getDateTimeString,
     ttl,
     getObjectPropValue,
     getBooleanPropValue,

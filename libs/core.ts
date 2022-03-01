@@ -122,6 +122,12 @@ export const timeDiff = (d1: Date, d2: Date, type: 'second' | 'sec' | 's' | 'min
     return diffT;
 };
 
+export const getDateTimeString = (dt?:any, delimiter?:string)=>{
+    if (!delimiter) delimiter = '-';
+    const s = (dt?dt:new Date()).toISOString().replace('T','-').replace(/:/g,'-').replace('Z','').replace(/\./g,'-');
+    return delimiter=='-'?s:s.replace(/-/g,delimiter);
+}
+
 export const serialNumber = () => {
     const dt: Date = new Date();
     let dtString: string = new Date(
