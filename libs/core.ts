@@ -10,11 +10,26 @@ import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 import Constants from './constants';
 import slugify from 'slugify';
-
+import * as csv from 'csvtojson';
 const { GUID_EMPTY } = Constants;
 
 export const _process: any = typeof process !== "undefined" ? process : {};;
 export const _track = `${_process?.env?.TRACK}`.toLowerCase() == 'true';
+
+export const csvToJson = async (s: string, onRecordReady?: (record: Record<string, any>) => {}): Promise<Array<Record<string, any>>> => {
+    return new Promise((resolve, reject) => {
+        csv().fromString(s)
+            .subscribe((r: Record<string, any>) => {
+                //this trigged at the record
+                if (onRecordReady) onRecordReady(r);
+            })
+            .then((result: Array<Record<string, any>>) => {
+                resolve(result)
+            }, (error: any) => {
+                reject(error);
+            });
+    });
+}
 
 
 export const stringToColor = (str: string, s?: number, l?: number) => {

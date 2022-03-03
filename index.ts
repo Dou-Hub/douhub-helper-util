@@ -68,6 +68,7 @@ export {
     readableFileSize,
     formatJSONString,
     deepFlatten,
+    csvToJson,
     _process,
     _track
 } from './libs/core';

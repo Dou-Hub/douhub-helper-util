@@ -431,7 +431,7 @@ export const hasPrivilege = (context: Record<string,any>, privlege: string): boo
 
     each(solutionRoles, (solutionRole) => {
         //check whether user has the solution role
-        if (!result && userRoles.indexOf("," + solutionRole.name.toLowerCase() + ",") >= 0) {
+        if (!result && solutionRole.value && userRoles.indexOf("," + solutionRole.value.toLowerCase() + ",") >= 0 && solutionRole.privileges) {
             //get all privileges of the solution role
             var privileges = "," + solutionRole.privileges.toLowerCase().replace(/ /g, "") + ",";
             //whether the privlege is being checked included in the role that the user has
