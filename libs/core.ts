@@ -16,6 +16,10 @@ const { GUID_EMPTY } = Constants;
 export const _process: any = typeof process !== "undefined" ? process : {};;
 export const _track = `${_process?.env?.TRACK}`.toLowerCase() == 'true';
 
+export const getPropName = (s: string): string => {
+    return formatText(s.replace(/[^a-zA-Z0-9]/g, ' ').replace(/[ ]{2,}/gi, ' '), 'camel');
+}
+
 export const csvToJson = async (s: string, onRecordReady?: (record: Record<string, any>) => {}): Promise<Array<Record<string, any>>> => {
     return new Promise((resolve, reject) => {
         csv().fromString(s)

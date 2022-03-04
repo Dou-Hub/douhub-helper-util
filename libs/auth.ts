@@ -24,7 +24,7 @@ export const isSolutionOwner = (context: Record<string, any>, record?:Record<str
     const solutionId = context?.solutionId ?? context?.solution?.id;
     const ownedBy = isNonEmptyString(solutionId) && (context?.solution?.ownedBy);
    
-    if (isNonEmptyString(solutionId) && record && record.solutionId!=solutionId) return false;
+    if (isNonEmptyString(solutionId) && record?.solutionId!=solutionId) return false;
     return isNonEmptyString(ownedBy) && ownedBy == context.userId;
 };
 
@@ -46,8 +46,8 @@ export const checkLicenses = (context: Record<string, any>, featureOrEntityName:
     const trackPrefix = 'checkLicenses';
     
     if (isNil(context?.solution)) {
-        if (_track) console.log(`${trackPrefix}.solutionNotFound`, { context, featureOrEntityName });
-        return false;
+        if (_track) console.log(`${trackPrefix}.solutionNotFound Skip Licenses Check`, { context, featureOrEntityName });
+        return true;
     }
 
     if (isNil(context?.user)) {
@@ -470,9 +470,9 @@ export const hasRole = (context: Record<string, any>, roleName: string, record?:
     if (roleName == 'ORG-ADMIN')
     {
         if (
-            !isNil(record) && sameGuid(organization.ownedBy, user.id) && sameGuid(organization.id, record.organizationId) 
+            isObject(record) && isObject(organization) && sameGuid(organization.ownedBy, user.id) && sameGuid(organization.id, record?.organizationId) 
             ||
-            isNil(record) && sameGuid(organization.ownedBy, user.id)
+            !isObject(record) && isObject(organization) && sameGuid(organization.ownedBy, user.id)
         ) return 'ORG-ADMIN';
     }
 

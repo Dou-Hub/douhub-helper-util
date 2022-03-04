@@ -69,6 +69,7 @@ export {
     formatJSONString,
     deepFlatten,
     csvToJson,
+    getPropName,
     _process,
     _track
 } from './libs/core';
