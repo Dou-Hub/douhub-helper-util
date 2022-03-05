@@ -20,6 +20,11 @@ export const getPropName = (s: string): string => {
     return formatText(s.replace(/[^a-zA-Z0-9]/g, ' ').replace(/[ ]{2,}/gi, ' '), 'camel');
 }
 
+//to handle TS6133: xxxx is declared but its value is never read.
+export const doNothing=(o:any)=>{
+    _process.doNothing = o;
+}
+
 export const csvToJson = async (s: string, onRecordReady?: (record: Record<string, any>) => {}): Promise<Array<Record<string, any>>> => {
     return new Promise((resolve, reject) => {
         csv().fromString(s)
