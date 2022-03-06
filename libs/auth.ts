@@ -442,6 +442,17 @@ export const hasPrivilege = (context: Record<string,any>, privlege: string): boo
     return result;
 };
 
+export const isMember = (user: Record<string, any>, regarding:Record<string, any>): boolean => {
+    if (!(isObject(user) && isNonEmptyString(user.id) && isNonEmptyString(user.organizationId))) return false;
+    if (!(isObject(regarding) && user.organizationId==regarding.organizationId && isObject(regarding.membership))) return false;
+    return isObject(regarding.membership[user.id]);
+}
+
+export const hasMemberRole = (user: Record<string, any>, regarding:Record<string, any>, roleName: string): boolean => {
+    if (!isMember(user, regarding)) return false;
+    return find(regarding.membership[user.id].roles, (r)=>r==roleName)?true:false;
+}
+
 
 //check whether a user has a role
 export const hasRole = (context: Record<string, any>, roleName: string, record?:Record<string, any>): string|undefined => {

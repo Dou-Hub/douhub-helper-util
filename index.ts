@@ -88,6 +88,8 @@ export {
 } from './libs/tree';
 
 export {
+    isMember,
+    hasMemberRole,
     hasRole,
     checkRecordPrivilege,
     isSolutionOwner,
