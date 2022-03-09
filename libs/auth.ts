@@ -28,12 +28,6 @@ export const isSolutionOwner = (context: Record<string, any>, record?:Record<str
     return isNonEmptyString(ownedBy) && ownedBy == context.userId;
 };
 
-export const recordOwnedByUser = (user: Record<string, any>, record?: Record<string, any>): boolean => {
-    const ownedBy = record?.ownedBy;
-    const userId = user?.id;
-    return isNonEmptyString(ownedBy) && isNonEmptyString(userId) && sameGuid(userId, ownedBy);
-};
-
 export const recordOwnedByOrganization = (user: Record<string, any>, record?: Record<string, any>): boolean => {
     const recordOrganizationId = record?.organizationId;
     const userOrganizationId = user?.organizationId;
@@ -313,8 +307,7 @@ export const checkPrivilege = (context: Record<string, any>, entityName?: string
     }
 
     //Owner of the record has all permission to the record.
-    if (recordOwnedByUser(user, record)) return true;
-
+    if (isOwner(user, record)) return true;
 
     //User don't have any permission to any record outside of the current organization
     if (record.id!=GUID_EMPTY && !recordOwnedByOrganization(user, record)) {
@@ -446,6 +439,12 @@ export const isMember = (user: Record<string, any>, regarding:Record<string, any
     if (!(isObject(user) && isNonEmptyString(user.id) && isNonEmptyString(user.organizationId))) return false;
     if (!(isObject(regarding) && user.organizationId==regarding.organizationId && isObject(regarding.membership))) return false;
     return isObject(regarding.membership[user.id]);
+}
+
+export const isOwner = (user: Record<string, any>, regarding:Record<string, any>): boolean => {
+    if (!(isObject(user) && isNonEmptyString(user.id) && isNonEmptyString(user.organizationId))) return false;
+    if (!(isObject(regarding) && user.organizationId==regarding.organizationId)) return false;
+    return sameGuid(regarding.ownedBy, user.id);
 }
 
 export const hasMemberRole = (user: Record<string, any>, regarding:Record<string, any>, roleName: string): boolean => {

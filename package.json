@@ -1,7 +1,7 @@
 {
   "name": "douhub-helper-util",
   "licence": "MIT",
-  "version": "1.0.76",
+  "version": "1.0.79",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {

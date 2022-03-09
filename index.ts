@@ -89,11 +89,11 @@ export {
 
 export {
     isMember,
+    isOwner,
     hasMemberRole,
     hasRole,
     checkRecordPrivilege,
     isSolutionOwner,
-    recordOwnedByUser,
     recordOwnedByOrganization,
     checkLicenses,
     hasLicense,

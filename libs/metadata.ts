@@ -13,7 +13,8 @@
 
 
 import { isNonEmptyString, isObject } from "./core";
-import { find } from "lodash";
+import { find , isArray} from "lodash";
+
 
 export const getEntity = (solution: Record<string, any>, entityName: string, entityType?: string): Record<string, any> | null =>
 {
