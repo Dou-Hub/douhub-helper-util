@@ -6,7 +6,7 @@
 import { isEmpty, isNil, each, isArray, find, isFunction } from 'lodash';
 import Constants from './constants';
 export const GUID_EMPTY = Constants.GUID_EMPTY;
-import { isNonEmptyString, isObject, sameGuid, isEmptyGuid, _track} from './core';
+import { isNonEmptyString, isObject, sameGuid, isEmptyGuid, _track } from './core';
 import { getEntity } from './metadata';
 
 
@@ -19,12 +19,12 @@ export const checkRecordPrivilege = (context: Record<string, any>, record: Recor
     return checkPrivilege(context, undefined, undefined, record, prType);
 };
 
-export const isSolutionOwner = (context: Record<string, any>, record?:Record<string, any>): boolean => {
+export const isSolutionOwner = (context: Record<string, any>, record?: Record<string, any>): boolean => {
 
     const solutionId = context?.solutionId ?? context?.solution?.id;
     const ownedBy = isNonEmptyString(solutionId) && (context?.solution?.ownedBy);
-   
-    if (isNonEmptyString(solutionId) && record?.solutionId!=solutionId) return false;
+
+    if (isNonEmptyString(solutionId) && record?.solutionId != solutionId) return false;
     return isNonEmptyString(ownedBy) && ownedBy == context.userId;
 };
 
@@ -38,7 +38,7 @@ export const recordOwnedByOrganization = (user: Record<string, any>, record?: Re
 export const checkLicenses = (context: Record<string, any>, featureOrEntityName: string): boolean => {
 
     const trackPrefix = 'checkLicenses';
-    
+
     if (isNil(context?.solution)) {
         if (_track) console.log(`${trackPrefix}.solutionNotFound Skip Licenses Check`, { context, featureOrEntityName });
         return true;
@@ -50,7 +50,7 @@ export const checkLicenses = (context: Record<string, any>, featureOrEntityName:
     }
 
     if (hasRole(context, 'SOLUTION-ADMIN')) return true;
-   
+
     const { user, solution } = context;
 
     //Root Admin has all permission
@@ -69,7 +69,7 @@ export const checkLicenses = (context: Record<string, any>, featureOrEntityName:
     //If there's no license for the solution, we will not check the license
     if (isArray(solutionLicenses) && solutionLicenses.length == 0) return true;
 
-     //If user has no license for user, we will try the default license in solution
+    //If user has no license for user, we will try the default license in solution
     const userLicenses = isArray(user.licenses) ? user.licenses.slice() : [];
     each(solutionLicenses, (solutionLicense) => {
         //if there's default license, add it to userLicenses
@@ -252,7 +252,7 @@ export const checkPrivilege = (context: Record<string, any>, entityName?: string
     }
 
     //get the entity profile
-    const entity = getEntity(solution, entityName?entityName:'', entityType);
+    const entity = getEntity(solution, entityName ? entityName : '', entityType);
 
     //entity has to be valid
     if (!isObject(entity)) {
@@ -310,7 +310,7 @@ export const checkPrivilege = (context: Record<string, any>, entityName?: string
     if (isOwner(user, record)) return true;
 
     //User don't have any permission to any record outside of the current organization
-    if (record.id!=GUID_EMPTY && !recordOwnedByOrganization(user, record)) {
+    if (record.id != GUID_EMPTY && !recordOwnedByOrganization(user, record)) {
         if (_track) console.log(`${trackPrefix}.recordOutOfOrg`, { record, user });
         return false;
     }
@@ -374,37 +374,37 @@ export const checkPrivilege = (context: Record<string, any>, entityName?: string
     return result;
 };
 
-export const isReader = (context: Record<string,any>, security: string[]): boolean => {
+export const isReader = (context: Record<string, any>, security: string[]): boolean => {
 
     const { user } = context;
 
     var result = find(security, (s) => s == "r." + user.id || s == "a." + user.id || s == "r." + GUID_EMPTY || s == "a." + GUID_EMPTY);
-    if (result) return result?true:false;
+    if (result) return result ? true : false;
 
     each(user.teamIds, (tid) => {
         if (!result) result = find(security, (s) => s == "r." + tid || s == "a." + tid);
     });
 
-    return result?true:false;
+    return result ? true : false;
 };
 
 
-export const isAuthor = (context: Record<string,any>, security: string[]): boolean => {
+export const isAuthor = (context: Record<string, any>, security: string[]): boolean => {
 
     const { user } = context;
 
     var result = find(security, (s) => s == "a." + user.id || s == "a." + GUID_EMPTY);
-    if (result) return result?true:false;
+    if (result) return result ? true : false;
 
     each(user.teamIds, (tid) => {
         if (!result) result = find(security, (s) => s == "a." + tid);
     });
 
-    return result?true:false;
+    return result ? true : false;
 };
 
 //Check whether the user has a certain privilege based the user roles
-export const hasPrivilege = (context: Record<string,any>, privlege: string): boolean => {
+export const hasPrivilege = (context: Record<string, any>, privlege: string): boolean => {
 
     const { organization, user, solution } = context;
 
@@ -435,59 +435,54 @@ export const hasPrivilege = (context: Record<string,any>, privlege: string): boo
     return result;
 };
 
-export const isMember = (user: Record<string, any>, regarding:Record<string, any>): boolean => {
+export const isMember = (user: Record<string, any>, regarding: Record<string, any>): boolean => {
     if (!(isObject(user) && isNonEmptyString(user.id) && isNonEmptyString(user.organizationId))) return false;
-    if (!(isObject(regarding) && user.organizationId==regarding.organizationId && isObject(regarding.membership))) return false;
-    return isObject(regarding.membership[user.id]);
+    if (!(isObject(regarding) && user.organizationId == regarding.organizationId && isObject(user.membership))) return false;
+    return isObject(user.membership[regarding.id]);
 }
 
-export const isOwner = (user: Record<string, any>, regarding:Record<string, any>): boolean => {
+export const isOwner = (user: Record<string, any>, regarding: Record<string, any>): boolean => {
     if (!(isObject(user) && isNonEmptyString(user.id) && isNonEmptyString(user.organizationId))) return false;
-    if (!(isObject(regarding) && user.organizationId==regarding.organizationId)) return false;
+    if (!(isObject(regarding) && user.organizationId == regarding.organizationId)) return false;
     return sameGuid(regarding.ownedBy, user.id);
 }
 
-export const hasMemberRole = (user: Record<string, any>, regarding:Record<string, any>, roleName: string): boolean => {
+export const hasMemberRole = (user: Record<string, any>, regarding: Record<string, any>, roleName: string): boolean => {
     if (!isMember(user, regarding)) return false;
-    return find(regarding.membership[user.id].roles, (r)=>r==roleName)?true:false;
+    return find(user.membership[regarding.id].roles, (r) => r == roleName) ? true : false;
 }
 
 
 //check whether a user has a role
-export const hasRole = (context: Record<string, any>, roleName: string, record?:Record<string, any>): string|undefined => {
+export const hasRole = (context: Record<string, any>, roleName: string, record?: Record<string, any>): string | undefined => {
 
     let { user, organization } = context;
-    if (!isObject(organization)) 
-    {
+    if (!isObject(organization)) {
         if (_track) console.error('The context.organization is not provided.');
         return undefined;
     }
 
-    if (!isObject(user)) 
-    {
+    if (!isObject(user)) {
         if (_track) console.error('The context.user is not provided.');
         return undefined;
     }
 
-    if (!isNonEmptyString(roleName)) 
-    {
+    if (!isNonEmptyString(roleName)) {
         if (_track) console.error('The roleName is not provided.');
         return undefined;
     }
 
     if (isSolutionOwner(context, record)) return 'SOLUTION-ADMIN';
 
-    if (roleName == 'ORG-ADMIN')
-    {
+    if (roleName == 'ORG-ADMIN') {
         if (
-            isObject(record) && isObject(organization) && sameGuid(organization.ownedBy, user.id) && sameGuid(organization.id, record?.organizationId) 
+            isObject(record) && isObject(organization) && sameGuid(organization.ownedBy, user.id) && sameGuid(organization.id, record?.organizationId)
             ||
             !isObject(record) && isObject(organization) && sameGuid(organization.ownedBy, user.id)
         ) return 'ORG-ADMIN';
     }
 
-    if (!isArray(user.roles)) 
-    {
+    if (!isArray(user.roles)) {
         if (_track) console.error('The user.roles does not exit.');
         return undefined;
     }
