@@ -456,16 +456,18 @@ export const hasMemberRole = (user: Record<string, any>, regarding: Record<strin
 //check whether a user has a role
 export const hasRole = (context: Record<string, any>, roleName: string, record?: Record<string, any>): string | undefined => {
 
-    let { user, organization } = context;
-    if (!isObject(organization)) {
-        if (_track) console.error('The context.organization is not provided.');
-        return undefined;
-    }
-
+    let { user, organizationId, organization } = context;
+    
     if (!isObject(user)) {
         if (_track) console.error('The context.user is not provided.');
         return undefined;
     }
+
+    if (user.organizationId != organizationId) {
+        if (_track) console.error('The user.organizationId and context.organizationId does not match.');
+        return undefined;
+    }
+
 
     if (!isNonEmptyString(roleName)) {
         if (_track) console.error('The roleName is not provided.');
@@ -486,7 +488,7 @@ export const hasRole = (context: Record<string, any>, roleName: string, record?:
         if (_track) console.error('The user.roles does not exit.');
         return undefined;
     }
-
+    
     const role = find(user.roles, (role) => {
         return role.toLowerCase() == roleName.toLowerCase();
     });
