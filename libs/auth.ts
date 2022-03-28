@@ -242,6 +242,7 @@ export const checkPrivilege = (context: Record<string, any>, entityName?: string
     //privilege type is required, if not being provided, it is by default read
     if (!prType) prType = 'read';
     prType = prType.toLowerCase();
+    
 
     if (!record) {
         record = { id: GUID_EMPTY, entityName, entityType, organizationId: organization.id };
@@ -249,6 +250,10 @@ export const checkPrivilege = (context: Record<string, any>, entityName?: string
     else {
         entityName = record.entityName;
         entityType = record.entityType;
+    }
+
+    if (prType === "read" && record.isGlobal==true) {
+        return true;
     }
 
     //get the entity profile
