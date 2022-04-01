@@ -3,7 +3,14 @@ import {isNonEmptyString, isObject,  isEmail, slug} from './core';
 
 export const getRecordDisplay = (record:Record<string,any>, maxLength?:number): string => {
     if (!isObject(record)) return '';
-    let result = getRecordFullName(record);
+
+    let result = '';
+
+    if (isArray(record?.highlight?.searchDisplay) && record?.highlight?.searchDisplay?.length > 0) {
+        result = record.highlight.searchDisplay[0];
+    }
+ 
+    if (!isNonEmptyString(result)) result = getRecordFullName(record);
     if (!isNonEmptyString(result) && isNonEmptyString(record.displayValue)) result = record.displayValue;
     const number = !isNonEmptyString(result) && isNonEmptyString(record.number) ? `${record.number} - ` : '';
     if (!isNonEmptyString(result) && isNonEmptyString(record.title)) result = `${number}${record.title}`;
@@ -11,34 +18,52 @@ export const getRecordDisplay = (record:Record<string,any>, maxLength?:number): 
     if (!isNonEmptyString(result) && isNonEmptyString(record.text)) result = record.text;
     if (!isNonEmptyString(result) && isNonEmptyString(record.symbol)) result = record.symbol;
     if (!isNonEmptyString(result) && isNonEmptyString(record.code)) result = record.code;
-    //if (!isNonEmptyString(result) && isNonEmptyString(record.display)) result = record.display;
-    if (!isNonEmptyString(result)) {
-        return '';
-    }
 
+    result = result
+        .replace(/&nbsp;/g, " ")
+        .replace(/\r/g, " ")
+        .replace(/\n/g, " ")
+        .replace(/\t/g, " ")
+        .replace(/!/g, '! ')
+        .replace(/\?/g, '? ')
+        .replace(/\./g, '. ')
+        .replace(/,/g, ', ')
+        .replace(/;/g, '; ')
+        .replace(new RegExp(`( ){2,}`, "g"), " ")
+        .trim();
+   
     if (isNumber(maxLength) && result.length > maxLength) result = `${result.substring(0, maxLength)} ...`;
-    return result.replace(/\n/g, ' ').replace(/\r/g, ' ').trim();
+    return result;
 };
 
 export const getRecordAbstract = (record:Record<string,any>, maxLength?:number, includeContent?:boolean): string => {
     if (!isObject(record)) return '';
     let result = '';
+
+    if (isArray(record?.highlight?.searchContent) && record?.highlight?.searchContent?.length > 0) {
+        result = record.highlight.searchContent[0];
+    }
+    
     if (result.length == 0 && isNonEmptyString(record.summary)) result = record.summary;
     if (result.length == 0 && isNonEmptyString(record.description)) result = record.description;
     if (result.length == 0 && isNonEmptyString(record.abstract)) result = record.abstract;
-    if (includeContent && result.length == 0 && isNonEmptyString(record.content)) result = record.content;
-    if (!isNonEmptyString(result)) return '';
-    // if (isNonEmptyString(result)) {
-    //     if (result.indexOf('<') >= 0) {
-    //         result = cheerio.load(result).text();
-    //     }
-    // }
-    // else {
-    //     result = '';
-    // }
+    if (includeContent && result.length == 0 && isNonEmptyString(record.searchContent)) result = record.searchContent;
 
+    result = result
+        .replace(/&nbsp;/g, " ")
+        .replace(/\r/g, " ")
+        .replace(/\n/g, " ")
+        .replace(/\t/g, " ")
+        .replace(/!/g, '! ')
+        .replace(/\?/g, '? ')
+        .replace(/\./g, '. ')
+        .replace(/,/g, ', ')
+        .replace(/;/g, '; ')
+        .replace(new RegExp(`( ){2,}`, "g"), " ")
+        .trim();
+   
     if (isNumber(maxLength) && result.length > maxLength) result = `${result.substring(0, maxLength)} ...`;
-    return result.replace(/\n/g, ' ').replace(/\r/g, ' ');
+    return result;
 };
 
 export const getRecordAddress = (record:Record<string,any>, prefix:string): string => {
