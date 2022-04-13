@@ -92,6 +92,8 @@ export {
     isOwner,
     hasMemberRole,
     hasRole,
+    hasAllRoles,
+    hasAnyRole,
     checkRecordPrivilege,
     isSolutionOwner,
     recordOwnedByOrganization,

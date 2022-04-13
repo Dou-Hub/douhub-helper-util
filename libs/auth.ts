@@ -457,6 +457,27 @@ export const hasMemberRole = (user: Record<string, any>, regarding: Record<strin
     return find(user.membership[regarding.id].roles, (r) => r == roleName) ? true : false;
 }
 
+export const hasAnyRole = (context: Record<string, any>, roleNames: string[], record?: Record<string, any>): string | undefined => {
+    for(let i=0;i<roleNames.length;i++)
+    {
+        const result = hasRole(context, roleNames[i], record);
+        if (isNonEmptyString(result)) return result;
+    }
+}
+
+export const hasAllRoles = (context: Record<string, any>, roleNames: string[], record?: Record<string, any>): boolean | undefined => {
+
+    if (roleNames.length==0) return false;
+    
+    for(let i=0;i<roleNames.length;i++)
+    {
+        const result = hasRole(context, roleNames[i], record);
+        if (isNil(result)) return false;
+    }
+
+    return true;
+}
+
 
 //check whether a user has a role
 export const hasRole = (context: Record<string, any>, roleName: string, record?: Record<string, any>): string | undefined => {
