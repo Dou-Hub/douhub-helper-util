@@ -3,7 +3,6 @@ import {isNonEmptyString, isObject,  isEmail, slug} from './core';
 
 export const getRecordDisplay = (record:Record<string,any>, maxLength?:number): string => {
     if (!isObject(record)) return '';
-
     let result = '';
 
     if (isArray(record?.highlight?.searchDisplay) && record?.highlight?.searchDisplay?.length > 0) {
@@ -44,10 +43,10 @@ export const getRecordAbstract = (record:Record<string,any>, maxLength?:number, 
         result = record.highlight.searchContent[0];
     }
     
-    if (result.length == 0 && isNonEmptyString(record.summary)) result = record.summary;
-    if (result.length == 0 && isNonEmptyString(record.description)) result = record.description;
-    if (result.length == 0 && isNonEmptyString(record.abstract)) result = record.abstract;
-    if (includeContent && result.length == 0 && isNonEmptyString(record.searchContent)) result = record.searchContent;
+    if (!isNonEmptyString(result) && isNonEmptyString(record.summary)) result = record.summary;
+    if (!isNonEmptyString(result)&& isNonEmptyString(record.description)) result = record.description;
+    if (!isNonEmptyString(result) && isNonEmptyString(record.abstract)) result = record.abstract;
+    if (includeContent && !isNonEmptyString(result) && isNonEmptyString(record.searchContent)) result = record.searchContent;
 
     result = result
         .replace(/&nbsp;/g, " ")
