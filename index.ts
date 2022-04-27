@@ -11,6 +11,7 @@ export {
     getWebQueryValue,
     setWebQueryValue,
     getWebLocation,
+    getWebRootUrl,
     fixUrl,
     getBaseDomain
 } from './libs/web';

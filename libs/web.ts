@@ -32,33 +32,39 @@ export const getBaseDomain = (domain: string): string => {
 }
 
 
+export const getWebRootUrl = (url: string) => {
+    const urlInfo = getWebLocation(url);
+    if (urlInfo) {
+        const { protocol, host, port } = urlInfo;
+        return `${protocol}://${host}${port ? ':' + port : ''}/`;
+    }
+    return null;
+}
 export const getWebLocation = (url: string) => {
     const match =
         isNonEmptyString(url) &&
         url.match(
             /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/
         );
-    return (
-        match && {
+    return  match ? {
             url,
-            protocol: match[1],
+            protocol: match[1].replace(':', ''),
             host: match[3],
             port: match[4],
             path: match[5],
             query: match[6].replace("?", ""),
             hash: match[7],
-        }
-    );
+        } : null;
 };
 
 export const fixUrl = (url: string, protocol: string, host: string): string => {
 
-    if (!isNonEmptyString(protocol)) protocol = 'https:';
+    if (!isNonEmptyString(protocol)) protocol = 'https';
     if (url.indexOf('//') == 0) {
         //url = url.replace('//', '/');
-        return `${protocol}${url}`;
+        return `${protocol}:${url}`;
     }
-    if (url.indexOf('/') == 0) url = `${protocol}//${host}${url}`;
+    if (url.indexOf('/') == 0) url = `${protocol}://${host}${url}`;
     return url;
 };
 
@@ -85,7 +91,7 @@ export const getWebQueryValue = (url: string, key: string, defaultValue?: string
 
 export const setWebQueryValue = (url: string, key: string, value?: string): string => {
     const val: string = !isNil(value) && isNonEmptyString(value) ? encodeURIComponent(value).replace(/'/g, '%27') : '';
-    url = url.replace(/[\?]{2,}/ig,'?');
+    url = url.replace(/[\?]{2,}/ig, '?');
     const lo = getWebLocation(url);
     if (lo && lo.query && lo.query.trim().length > 0) {
         let queries: (string | undefined | null)[] = lo.query.split(`&`);
