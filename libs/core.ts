@@ -269,14 +269,14 @@ export const getPropValueOfObject = (obj: Record<string, any> | null | undefined
     return v;
 };
 
-const _memoryCache: Record<string, any> = {};
+if (!_isObject(_process._memoryCache)) _process._memoryCache = {};
 
 export const getMemoryCache = (key: string) => {
 
     if (!isNonEmptyString(key)) return null;
 
     try {
-        const result = _memoryCache[key];
+        const result = _process._memoryCache[key];
         if (result) {
             if (isInteger(result.ttl) && Date.now() > result.ttl * 1000) { //ttl is in seconds
                 return null;
@@ -294,14 +294,15 @@ export const getMemoryCache = (key: string) => {
 export const setMemoryCache = (key: string, value: any, expireMinutes: number) => {
 
     if (!isNonEmptyString(key)) return null;
+    _process._memoryCache[key] = {};
     if (expireMinutes > 0) {
-        _memoryCache[key].ttl = ttl(expireMinutes);
+        _process._memoryCache[key].ttl = ttl(expireMinutes);
     }
     else {
-        _memoryCache[key].ttl = ttl(30 * 24 * 60); //30 days default
+        _process._memoryCache[key].ttl = ttl(30 * 24 * 60); //30 days default
     }
 
-    _memoryCache[key].cache = value;
+    _process._memoryCache[key].cache = value;
 };
 
 export const cleanGuid = (v: string): string => {
