@@ -3,9 +3,10 @@
 //  This source code is licensed under the MIT license.
 //  The detail information can be found in the LICENSE file in the root directory of this source tree.
 
-import { isObject as _isObject, isNil, isString, sortBy, without, map,
-    capitalize, each,
-    isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean } from "lodash";
+import {
+    isObject as _isObject, isNil, isString, sortBy, without, map, capitalize,
+    isArray, isNumber, forOwn, camelCase, isNaN, isInteger, isFunction, isBoolean
+} from "lodash";
 import { isValidNumber } from "libphonenumber-js";
 import { v4 } from 'uuid';
 import Constants from './constants';
@@ -21,7 +22,7 @@ export const getPropName = (s: string): string => {
 }
 
 //to handle TS6133: xxxx is declared but its value is never read.
-export const doNothing=(o:any)=>{
+export const doNothing = (o?: any) => {
     _process.doNothing = o;
 }
 
@@ -42,12 +43,12 @@ export const csvToJson = async (s: string, onRecordReady?: (record: Record<strin
 
 
 export const stringToColor = (str: string, s?: number, l?: number) => {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
 
-    var h = hash % 360;
+    const h = hash % 360;
     return `hsl(${h}, ${s && s >= 0 && s <= 100 ? s : 50}%, ${l && l >= 0 && l <= 100 ? l : 50}%)`;
 }
 
@@ -146,10 +147,10 @@ export const timeDiff = (d1: Date, d2: Date, type: 'second' | 'sec' | 's' | 'min
     return diffT;
 };
 
-export const getDateTimeString = (dt?:any, delimiter?:string)=>{
+export const getDateTimeString = (dt?: any, delimiter?: string) => {
     if (!delimiter) delimiter = '-';
-    const s = (dt?dt:new Date()).toISOString().replace('T','-').replace(/:/g,'-').replace('Z','').replace(/\./g,'-');
-    return delimiter=='-'?s:s.replace(/-/g,delimiter);
+    const s = (dt ? dt : new Date()).toISOString().replace('T', '-').replace(/:/g, '-').replace('Z', '').replace(/\./g, '-');
+    return delimiter == '-' ? s : s.replace(/-/g, delimiter);
 }
 
 export const serialNumber = () => {
@@ -372,7 +373,7 @@ export const isPassword = (v: string, settings?: any) => {
         needLowerCaseLetter,
         needUpperCaseLetter,
         needDigit,
-        needSepcialChar,
+        needSpecialChar,
         minLen } = settings;
 
 
@@ -398,9 +399,9 @@ export const isPassword = (v: string, settings?: any) => {
         if (!result) console.log('Password does not contain lowercase letter.');
     }
 
-    if (result && needSepcialChar) {
+    if (result && needSpecialChar) {
         result = new RegExp(/^(?=.*[!@#$%^&*])[\w!@#$%.^&*]+$/).test(v);
-        if (!result) console.log('Password does not contain special charactors.');
+        if (!result) console.log('Password does not contain special character.');
     }
 
     return result;
@@ -420,15 +421,15 @@ export const utcMaxISOString = (): string => {
 export const formatString = (...args: string[]) => {
     if (args.length == 0) return null;
     let s = args[0];
-    for (var i = 1; i < args.length; i++) {
+    for (let i = 1; i < args.length; i++) {
         s = s.replace(/\{0\}/g, args[i]);
     }
     return s;
 };
 
-export const shortenString = (s:string, l:number): string => {
-    return s.length<=l?s:`${s.substring(0,l)} ...`;
- };
+export const shortenString = (s: string, l: number): string => {
+    return s.length <= l ? s : `${s.substring(0, l)} ...`;
+};
 
 //the isObject from lodash will cause error from typescript
 //this one will not
@@ -463,7 +464,7 @@ export const removeNoValueProperty = (data: Record<string, any>, removeEmptyStri
         );
     }
 
-    for (var p in data) {
+    for (const p in data) {
         const v = data[p];
 
         if (v === undefined || v === null || (v === "" && removeEmptyString)) {
@@ -529,37 +530,37 @@ export const shortenNumber = (num: number, fractionDigits?: number) => {
         { value: 1e15, symbol: "P" },
         { value: 1e18, symbol: "E" }
     ];
-    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    var item = lookup.slice().reverse().find(function (item) {
+    //const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    const item = lookup.slice().reverse().find(function (item) {
         return num >= item.value;
     });
     return item ? item && (num / item.value).toFixed(fractionDigits) + item.symbol : "0";
 }
 
 
-export const numberWithCommas = (x:number) => {
+export const numberWithCommas = (x: number) => {
     if (!isNumber(x)) return null;
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-export const formatText = (text:string, format:'lower'|'upper'|'capital'|'capital-first'|'capital-all'|'camel'|'initials') => {
+export const formatText = (text: string, format: 'lower' | 'upper' | 'capital' | 'capital-first' | 'capital-all' | 'camel' | 'initials') => {
     switch (format) {
         case 'lower': return text.toLowerCase();
         case 'upper': return text.toUpperCase();
         case 'capital':
         case 'capital-first': return capitalize(text);
         case 'capital-all': return map(text.split(' '), capitalize).join(' ');
-        case 'initials': return map(text.split(' '), (t)=>t.length>0?t.charAt(0):'').join(' ');
+        case 'initials': return map(text.split(' '), (t) => t.length > 0 ? t.charAt(0) : '').join(' ');
         case 'camel': return camelCase(text);
         default: return text;
     }
 };
 
 
-export const readableFileSize = (fileSizeInBytes:number) => {
+export const readableFileSize = (fileSizeInBytes: number) => {
     if (!isNumber(fileSizeInBytes)) return "";
-    var i = -1;
-    var byteUnits = [" KB", " MB", " GB", " TB", "PB", "EB", "ZB", "YB"];
+    let i = -1;
+    const byteUnits = [" KB", " MB", " GB", " TB", "PB", "EB", "ZB", "YB"];
     do {
         fileSizeInBytes = fileSizeInBytes / 1024;
         i++;
@@ -583,7 +584,7 @@ export const formatJSONString = (c: string) => {
 };
 
 export const deepFlatten = (array: Array<any>): Array<any> => {
-    var result: Array<any> = [];
+    let result: Array<any> = [];
     array.forEach(function (elem) {
         if (Array.isArray(elem)) {
             result = result.concat(deepFlatten(elem));
