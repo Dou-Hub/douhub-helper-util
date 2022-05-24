@@ -12,9 +12,9 @@ export const getTreeItem = (items: Array<Record<string, any>>,
     childrenNodeName?: string)
     : Record<string, any> | undefined => {
     if (!childrenNodeName) childrenNodeName = "items";
-    var v: Record<string, any> | undefined = undefined;
+    let v: Record<string, any> | undefined = undefined;
     if (isArray(items) && items.length > 0) {
-        for (var i = 0; i < items.length && !v; i++) {
+        for (let i = 0; i < items.length && !v; i++) {
             const item = items[i];
             if (func(item)) {
                 v = item;
@@ -80,7 +80,7 @@ export const updateTreeItem = (items: Array<Record<string, any>>, id: string,
 export const insertTreeItem = (items: Array<Record<string, any>>, id: string, newItem: Record<string, any>, pos: 'above' | 'below' | 'children', childrenNodeName?: string): Array<Record<string, any>> => {
 
     if (!childrenNodeName) childrenNodeName = "items";
-    let idx = findIndex(items, (item) => {
+    const idx = findIndex(items, (item) => {
         return sameGuid(item.id, id);
     });
 
@@ -175,7 +175,7 @@ export const getTreeItemHavingPropValue = (items: Array<Record<string, any>>,
     const itemInfo: Record<string, any> = getTreeItemPath(items, func, childrenNodeName);
     if (!itemInfo.item) return undefined; //item not found
     if (itemInfo.item[prop] != undefined) return itemInfo.item;
-    for (var i = itemInfo.path.length - 1; i >= 0; i--) {
+    for (let i = itemInfo.path.length - 1; i >= 0; i--) {
         if (itemInfo.path[i][prop] != undefined) return itemInfo.path[i];
     }
 
